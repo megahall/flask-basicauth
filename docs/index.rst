@@ -44,6 +44,12 @@ just set ``BASIC_AUTH_FORCE`` configuration variable to `True`::
 You might find this useful, for example, if you would like to protect your
 staging server from uninvited guests.
 
+If you need Flask-BasicAuth to be compatible with
+`Flask-CORS <https://flask-cors.corydolphin.com/en/latest/>`_, just set
+``BASIC_AUTH_ALLOW_OPTIONS`` to `True`::
+
+    app.config['BASIC_AUTH_ALLOW_OPTIONS'] = True
+
 .. warning::
 
    Please make sure that you use SSL/TLS (HTTPS) to encrypt the connection
@@ -64,6 +70,12 @@ A list of configuration keys currently understood by the extension:
 ``BASIC_AUTH_FORCE``
     If set to `True`, makes the whole site require HTTP basic access
     authentication.
+
+    Defaults to `False`.
+
+``BASIC_AUTH_ALLOW_OPTIONS``
+    If set to `True`, allows the ``OPTIONS`` method on the whole site with
+    HTTP basic access authentication, for compatibility with Flask-CORS.
 
     Defaults to `False`.
 

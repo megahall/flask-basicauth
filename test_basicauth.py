@@ -2,7 +2,7 @@ import base64
 import unittest
 
 from flask import Flask
-from flask.ext.basicauth import BasicAuth
+from flask_basicauth import BasicAuth
 
 
 class BasicAuthTestCase(unittest.TestCase):
@@ -38,6 +38,7 @@ class BasicAuthTestCase(unittest.TestCase):
     def test_sets_default_values_for_configuration(self):
         self.assertEqual(self.app.config['BASIC_AUTH_REALM'], '')
         self.assertEqual(self.app.config['BASIC_AUTH_FORCE'], False)
+        self.assertEqual(self.app.config['BASIC_AUTH_ALLOW_OPTIONS'], False)
 
     def test_views_without_basic_auth_decorator_respond_with_200(self):
         response = self.client.get('/')
@@ -47,6 +48,11 @@ class BasicAuthTestCase(unittest.TestCase):
         self.app.config['BASIC_AUTH_FORCE'] = True
         response = self.client.get('/')
         self.assertEqual(response.status_code, 401)
+
+    def test_ignores_authentication_for_options_when_allowed(self):
+        self.app.config['BASIC_AUTH_ALLOW_OPTIONS'] = True
+        response = self.client.options('/')
+        self.assertEqual(response.status_code, 200)
 
     def test_responds_with_401_without_authorization(self):
         response = self.client.get('/protected')

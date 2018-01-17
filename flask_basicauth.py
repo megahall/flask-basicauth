@@ -42,6 +42,7 @@ class BasicAuth(object):
         """
         app.config.setdefault('BASIC_AUTH_FORCE', False)
         app.config.setdefault('BASIC_AUTH_REALM', '')
+        app.config.setdefault('BASIC_AUTH_ALLOW_OPTIONS', False)
 
         @app.before_request
         def require_basic_auth():
@@ -76,8 +77,9 @@ class BasicAuth(object):
         """
         auth = request.authorization
         return (
-            auth and auth.type == 'basic' and
-            self.check_credentials(auth.username, auth.password)
+            (current_app.config['BASIC_AUTH_ALLOW_OPTIONS'] and request.method == 'OPTIONS') or
+            (auth and auth.type == 'basic' and
+            self.check_credentials(auth.username, auth.password))
         )
 
     def challenge(self):
